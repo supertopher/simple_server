@@ -7,23 +7,44 @@ Signal.trap("INT") {
 }
 
 server = TCPServer.new 2000
+def response
+  create_header
+end
 
-def parse_input input
-  case input
-  when "home"
-    "Welcome to the Black Sun!"
-  when "profile"
-    "User: Matt Baker"
-  else
-    "I don't know what you mean"
+class Header
+  def initialize args = {}
+    @http_version   = args[:http_version]   ||= "HTTP/1.1"
+    @response_code  = args[:response_code]  ||= "200"
+    @server         = args[:server]         ||= "Topherserve/.0.0.1 (BSD) (OSX)"
+    @content_type   = args[:content_type]   ||= "text/html; charset=UTF-8"
+    @connection     = args[:connection]     ||= "close"
+    # @time           = Time.now.gmtime # Syntax Check this
+  end
+
+  def response
+    "#{@http_version}
+    Server: #{@server}
+    Content-Type: #{@content_type}
+    Connection: #{@connection}
+
+    "
   end
 end
 
+header = Header.new
+body =
+"
+<html>
+  <head>
+    <title>Super Title</title>
+  </head>
+  <body>
+    Hello World!!
+  </body>
+</html>"
+
 loop do
   client = server.accept
-  client.puts "What can i do for you Lazlo?"
-  input = client.gets.chomp
-  p input
-  client.puts parse_input(input)
+  client.puts header.response + body
   client.close
 end
