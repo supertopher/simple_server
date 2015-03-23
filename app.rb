@@ -1,4 +1,6 @@
+$LOAD_PATH.unshift(File.expand_path('.'))
 require 'socket'
+require 'views'
 
 Signal.trap("INT") {
   puts
@@ -7,11 +9,8 @@ Signal.trap("INT") {
 }
 
 server = TCPServer.new 2000
-def response
-  create_header
-end
 
-class Header
+class Response
   def initialize args = {}
     @http_version   = args[:http_version]   ||= "HTTP/1.1"
     @response_code  = args[:response_code]  ||= "200"
@@ -21,30 +20,24 @@ class Header
     # @time           = Time.now.gmtime # Syntax Check this
   end
 
-  def response
-    "#{@http_version}
-    Server: #{@server}
-    Content-Type: #{@content_type}
-    Connection: #{@connection}
+  def headers
+"#{@http_version}
+Server: #{@server}
+Content-Type: #{@content_type}
+Connection: #{@connection}
 
-    "
+"
   end
 end
 
-header = Header.new
-body =
-"
-<html>
-  <head>
-    <title>Super Title</title>
-  </head>
-  <body>
-    Hello World!!
-  </body>
-</html>"
+response = Response.new
+
+puts response.headers
+puts View.welcome
 
 loop do
   client = server.accept
-  client.puts header.response + body
+  client.gets
+  client.puts response.headers + View.welcome
   client.close
 end
