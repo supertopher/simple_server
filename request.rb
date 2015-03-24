@@ -12,7 +12,7 @@ class Request
 
   def parse_first_line
     first_line = @header.take(1)
-    first_line[0].split(' ')
+    first_line = first_line[0].split(' ')
     @verb         = first_line[0]
     @url          = first_line[1]
     @http_version = first_line[2]
