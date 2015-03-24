@@ -1,3 +1,5 @@
+require 'socket'
+
 class Server
   def initialize port = 2000
     @server = TCPServer.new port

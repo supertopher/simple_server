@@ -1,5 +1,4 @@
 $LOAD_PATH.unshift(File.expand_path('.'))
-require 'socket'
 require 'routes'
 require 'response'
 require 'request'
