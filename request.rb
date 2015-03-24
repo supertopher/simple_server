@@ -6,13 +6,8 @@ class Request
     @header = header
     # parse_header
     parse_first_line
-    parse_uri
+    parse_uri if @uri.include?("?")
   end
-
-  # def parse_header
-  #   @header = @header.split("\n")
-  #   parse_first_line
-  # end
 
   def parse_first_line
     first_line = @header.take(1)[0].split(' ')
@@ -28,10 +23,6 @@ class Request
       key, value = param_string.split("=")
       @params[key] = value
     end
-    puts "Params yo #{@params}"
-
-    # @params = CGI::parse(params)
-    # p @params
   end
 
 end

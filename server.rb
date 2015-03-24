@@ -3,6 +3,7 @@ require 'socket'
 class Server
   def initialize port = 2000
     @server = TCPServer.new port
+    @routes = { "get" => {}, "post" => {} }
   end
 
   def listen!
@@ -25,17 +26,28 @@ class Server
   end
 
   def build_response request, client
-    body = ""
-    if Router.valid_route?(request.uri)
+    request_route = @routes[request.verb.downcase][request.uri]
+    if request_route
       response              = Response.new({ :http_version => request.http_version })
-      safe_url = (/(\w+)/).match(request.uri)
-      view_method = View.method(safe_url.to_s)
-      body = view_method.call
+      body = request_route.call
     else
       response              = Response.new({ :http_version => request.http_version,
         :response_code => "404 Not Found" })
       body = "Resource Not Found"
     end
+    # body = ""
+    # if Router.valid_route?(request.uri)
+    #   safe_url = (/(\w+)/).match(request.uri)
+    #   view_method = View.method(safe_url.to_s)
+    #   body = view_method.call
+    # else
+    # end
     client.puts response.headers + body
   end
+
+  def get(uri, &block)
+    @routes["get"][uri] = block
+  end
+
+
 end

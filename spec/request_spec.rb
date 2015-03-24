@@ -21,6 +21,10 @@ let(:sample_request) {
     expect(Request.new(sample_request).params).to eq({"first" => "Chris"})
   end
 
+  it "should correctly get two params from the URI" do
+    expect(Request.new(sample_request).params).to eq({"first" => "Chris"})
+  end
+
   xit "should correctly parse given host header" do
     expect(Request.new(sample_request).host).to eq("127.0.0.1:2000")
   end
