@@ -9,11 +9,12 @@ class Response
   end
 
   def headers
-"#{@http_version} #{@response_code}
-Server: #{@server}
-Content-Type: #{@content_type}
-Connection: #{@connection}
-
-"
+    headers = ""
+    headers << "#{@http_version} #{@response_code}\n"
+    headers << "Server: #{@server}\n"
+    headers << "Content-Type: #{@content_type}\n"
+    headers << "Connection: #{@connection}"
+    headers << "\n\n" # Double newline signifies end of header
   end
+
 end
