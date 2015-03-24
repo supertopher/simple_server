@@ -2,7 +2,6 @@ $LOAD_PATH.unshift(File.expand_path('.'))
 require 'socket'
 # require 'views'
 require 'routes'
-require 'base'
 require 'byebug'
 
 Signal.trap("INT") {
@@ -16,7 +15,7 @@ server = TCPServer.new 2000
 class Response
   def initialize args = {}
     @http_version   = args[:http_version]   ||= "HTTP/1.1"
-    @response_code  = args[:response_code]  ||= "200"
+    @response_code  = args[:response_code]  ||= "200 OK"
     @server         = args[:server]         ||= "Topherserve/.0.0.1 (BSD) (OSX)"
     @content_type   = args[:content_type]   ||= "text/html; charset=UTF-8"
     @connection     = args[:connection]     ||= "close"
@@ -24,7 +23,7 @@ class Response
   end
 
   def headers
-"#{@http_version}
+"#{@http_version} #{@response_code}
 Server: #{@server}
 Content-Type: #{@content_type}
 Connection: #{@connection}
@@ -47,11 +46,10 @@ loop do
     view_method = View.method(safe_url.to_s)
     puts "here"
     body = view_method.call
-    p body
   else
     response              = Response.new({ :http_version => request_http_version,
-    :response_code => 404 })
-    puts "hill"
+    :response_code => "404 Not Found" })
+    body = "Resource Not Found"
   end
   client.puts response.headers + body
   client.close
