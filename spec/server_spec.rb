@@ -8,4 +8,8 @@ describe "#server" do
     expect(Server.new.get_header_array client).to eq(["GET /welcome HTTP/1.1", "User-Agent: curl/7.37.1", "Host: 127.0.0.1:2000", "Accept: */*", ""])
   end
 
+  it "should return the rendered route at /" do
+
+  end
+
 end

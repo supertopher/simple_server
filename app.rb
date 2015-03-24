@@ -13,8 +13,12 @@ Signal.trap("INT") {
 
 server = Server.new
 
-server.get '/' do
-  "Hello Topherserv World"
+server.get '/' do |request|
+  if request.params.key? "name"
+    "Hello there #{request.params["name"]}"
+  else
+    "Hello Topherserv World"
+  end
 end
 
 

@@ -21,7 +21,6 @@ class Server
     while request_array.last != ""
       request_array << client.gets.chomp
     end
-    # puts "request_array #{request_array}"
     request_array
   end
 
@@ -29,19 +28,12 @@ class Server
     request_route = @routes[request.verb.downcase][request.uri]
     if request_route
       response              = Response.new({ :http_version => request.http_version })
-      body = request_route.call
+      body = request_route.call(request)
     else
       response              = Response.new({ :http_version => request.http_version,
         :response_code => "404 Not Found" })
       body = "Resource Not Found"
     end
-    # body = ""
-    # if Router.valid_route?(request.uri)
-    #   safe_url = (/(\w+)/).match(request.uri)
-    #   view_method = View.method(safe_url.to_s)
-    #   body = view_method.call
-    # else
-    # end
     client.puts response.headers + body
   end
 
