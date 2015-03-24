@@ -20,6 +20,7 @@ class Server
     while request_array.last != ""
       request_array << client.gets.chomp
     end
+    # puts "request_array #{request_array}"
     request_array
   end
 
