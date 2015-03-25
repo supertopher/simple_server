@@ -40,13 +40,18 @@ class Server
     client.puts response.headers + body
   end
 
-  def get(uri, &block)
+  def get(uri, &block) #combine this with post for DRY
     @routes["get"][uri] = block
   end
 
+  def post(uri, &block)
+    @routes["post"][uri] = block
+  end
+
   def erb file_to_render, request
-    ns = Namespace.new(request.params)
-    ERB.new(File.read("./views/#{file_to_render.to_s}.erb")).result(ns.get_binding)
+    ns = Namespace.new(request.params) if request.params
+    ERB.new(File.read("./views/#{file_to_render.to_s}.erb")).result(ns.get_binding) if ns
+    ERB.new(File.read("./views/#{file_to_render.to_s}.erb")).result if !ns
   end
 
 

@@ -1,9 +1,7 @@
 $LOAD_PATH.unshift(File.expand_path('.'))
-require 'routes'
 require 'response'
 require 'request'
 require 'server'
-require 'routes'
 require 'erb'
 
 Signal.trap("INT") {
@@ -15,15 +13,11 @@ Signal.trap("INT") {
 server = Server.new
 
 server.get '/' do |request|
-  if request.params.key? "name"
-    "Hello there #{request.params["name"]}"
-  else
-    "Hello Topherserv World"
-  end
+  server.erb :index, request
 end
 
 server.get '/welcome' do |request|
-  server.erb :index, request
+  server.erb :welcome, request
 end
 
 
