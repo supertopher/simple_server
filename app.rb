@@ -4,6 +4,7 @@ require 'response'
 require 'request'
 require 'server'
 require 'routes'
+require 'erb'
 
 Signal.trap("INT") {
   puts
@@ -19,6 +20,10 @@ server.get '/' do |request|
   else
     "Hello Topherserv World"
   end
+end
+
+server.get '/welcome' do |request|
+  server.erb :index, request
 end
 
 

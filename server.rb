@@ -1,4 +1,7 @@
+$LOAD_PATH.unshift(File.expand_path('.'))
 require 'socket'
+require 'namespace'
+
 
 class Server
   def initialize port = 2000
@@ -39,6 +42,11 @@ class Server
 
   def get(uri, &block)
     @routes["get"][uri] = block
+  end
+
+  def erb file_to_render, request
+    ns = Namespace.new(request.params)
+    ERB.new(File.read("./views/#{file_to_render.to_s}.erb")).result(ns.get_binding)
   end
 
 
